@@ -21,7 +21,7 @@ const translations = {
     rsvpMsg: "Kindly confirm your presence by 22 April 2026.",
     contact: "Contact Person", phone: "Phone", waTitle: "WhatsApp RSVP", waBtn: "Send Confirmation",
     footer: "Made with love for our special day.",
-    loader: "Preparing Celebration Experience",
+    loader: "Preparing a Shubh Beginning...",
     timeDays: "Days", timeHours: "Hours", timeMins: "Minutes left",
     ceremonyStarted: "Ceremony started - welcome to the celebration!",
     btnText: "અંગ્રેજી (English)",
@@ -63,11 +63,20 @@ const parallaxLayers = Array.from(document.querySelectorAll(".parallax-layer"));
 const petalContainer = document.getElementById("petal-container");
 const fireworksCanvas = document.getElementById("fireworks-canvas");
 const langToggleButton = document.getElementById("lang-toggle");
+const rings3dPremiumContainer = document.getElementById("rings-3d-premium-container");
+const rings3dLoaderContainer = document.getElementById("rings-3d-loader");
 
 const PREFERS_REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)");
+const OPENING_TIMELINE = {
+  introEndMs: 900,
+  highlightStartMs: 900,
+  interlockEndMs: 1700,
+  loaderExitStartMs: 1700,
+  totalMs: 2200
+};
 
 class FireworksShow {
-  constructor(canvas) {
+  constructor(canvas, options = {}) {
     this.canvas = canvas;
     this.ctx = canvas ? canvas.getContext("2d") : null;
     this.rockets = [];
@@ -77,7 +86,9 @@ class FireworksShow {
     this.lastFrame = 0;
     this.rafId = null;
     this.isRunning = false;
-    this.launchDurationMs = 3600;
+    this.launchDurationMs = options.launchDurationMs ?? 3000;
+    this.launchIntervalMs = options.launchIntervalMs ?? 220;
+    this.doubleLaunchChance = options.doubleLaunchChance ?? 0.35;
     this.finishTimeout = 900;
     this.colors = ["#FFD700", "#FDB931", "#7A1F2F", "#FF9933"];
     this.resizeHandler = this.resize.bind(this);
@@ -225,9 +236,9 @@ class FireworksShow {
     if (elapsed < this.launchDurationMs) {
       this.launchTimer += now - (this.lastLaunchTime || now);
       this.lastLaunchTime = now;
-      if (this.launchTimer > 180) {
+      if (this.launchTimer > this.launchIntervalMs) {
         this.launchRocket(Math.random() > 0.5);
-        if (Math.random() > 0.55) {
+        if (Math.random() < this.doubleLaunchChance) {
           this.launchRocket(Math.random() > 0.5);
         }
         this.launchTimer = 0;
@@ -348,15 +359,33 @@ function initPremiumOpening() {
     if (pageLoader) {
       pageLoader.classList.add("hidden");
     }
-    return;
+    return 0;
   }
+
+  if (pageLoader) {
+    pageLoader.classList.add("phase-intro");
+  }
+
+  window.setTimeout(() => {
+    if (pageLoader) {
+      pageLoader.classList.add("phase-highlight");
+    }
+  }, OPENING_TIMELINE.highlightStartMs);
+
+  window.setTimeout(() => {
+    if (pageLoader) {
+      pageLoader.classList.add("exit");
+    }
+  }, OPENING_TIMELINE.loaderExitStartMs);
 
   window.setTimeout(() => {
     if (pageLoader) {
       pageLoader.classList.add("hidden");
     }
     document.body.classList.add("is-ready");
-  }, 1300);
+  }, OPENING_TIMELINE.totalMs);
+
+  return OPENING_TIMELINE.totalMs;
 }
 
 function initRevealAnimations() {
@@ -447,13 +476,266 @@ function initFallingPetals() {
   }
 }
 
-function initOpeningFireworks() {
-  if (PREFERS_REDUCED_MOTION.matches || !fireworksCanvas) {
+function initOpeningFireworks(options = {}) {
+  const {
+    startDelayMs = 0,
+    launchDurationMs = 3000,
+    launchIntervalMs = 220,
+    doubleLaunchChance = 0.35
+  } = options;
+
+  window.setTimeout(() => {
+    if (PREFERS_REDUCED_MOTION.matches || !fireworksCanvas) {
+      return;
+    }
+
+    const show = new FireworksShow(fireworksCanvas, {
+      launchDurationMs,
+      launchIntervalMs,
+      doubleLaunchChance
+    });
+    show.start();
+  }, startDelayMs);
+}
+
+function createDiamondRingModel(THREE, options = {}) {
+  const {
+    radius = 1,
+    tube = 0.11,
+    bandColor = 0xf3cd63,
+    diamondSize = 0.2,
+    prongRadius = 0.018,
+    prongHeight = 0.14,
+    envMap = null,
+    envMapIntensity = 1.25,
+    shoulderStoneCount = 0
+  } = options;
+
+  const group = new THREE.Group();
+
+  const bandGeometry = new THREE.TorusGeometry(radius, tube, 52, 220);
+  const bandMaterial = new THREE.MeshPhysicalMaterial({
+    color: bandColor,
+    metalness: 1,
+    roughness: 0.16,
+    clearcoat: 1,
+    clearcoatRoughness: 0.08,
+    envMap,
+    envMapIntensity
+  });
+  const band = new THREE.Mesh(bandGeometry, bandMaterial);
+  // Slender engagement-ring shank profile.
+  band.scale.set(1.1, 0.72, 0.92);
+  group.add(band);
+
+  const settingGroup = new THREE.Group();
+  settingGroup.position.set(0, radius + tube * 0.32, 0);
+  group.add(settingGroup);
+
+  // Cathedral shoulder feel: tiny bridge between band and setting.
+  const bridgeGeometry = new THREE.TorusGeometry(diamondSize * 0.47, tube * 0.22, 16, 36, Math.PI);
+  const bridge = new THREE.Mesh(bridgeGeometry, bandMaterial.clone());
+  bridge.rotation.set(Math.PI / 2, 0, Math.PI);
+  bridge.position.y = diamondSize * 0.02;
+  settingGroup.add(bridge);
+
+  // Basket under the stone.
+  const galleryGeometry = new THREE.CylinderGeometry(diamondSize * 0.33, diamondSize * 0.48, diamondSize * 0.26, 18);
+  const gallery = new THREE.Mesh(galleryGeometry, bandMaterial.clone());
+  gallery.position.y = diamondSize * 0.18;
+  settingGroup.add(gallery);
+
+  // High-facet gemstone setup for a stronger "real diamond" look.
+  const diamondMaterial = new THREE.MeshPhongMaterial({
+    color: 0xf8fbff,
+    emissive: 0x101826,
+    emissiveIntensity: 0.12,
+    shininess: 210,
+    specular: 0xffffff,
+    transparent: true,
+    opacity: 0.97,
+    envMap,
+    reflectivity: 0.95
+  });
+
+  const diamondGeometry = new THREE.IcosahedronGeometry(diamondSize * 0.48, 1);
+  const diamond = new THREE.Mesh(diamondGeometry, diamondMaterial);
+  diamond.position.y = diamondSize * 0.5;
+  diamond.scale.set(1, 1.1, 1);
+  settingGroup.add(diamond);
+
+  // Bright table cap to make top-face sparkle obvious.
+  const tableMaterial = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    shininess: 250,
+    specular: 0xffffff,
+    transparent: true,
+    opacity: 0.9,
+    envMap,
+    reflectivity: 1
+  });
+  const tableGeometry = new THREE.CylinderGeometry(diamondSize * 0.19, diamondSize * 0.23, diamondSize * 0.07, 12);
+  const table = new THREE.Mesh(tableGeometry, tableMaterial);
+  table.position.y = diamondSize * 0.81;
+  settingGroup.add(table);
+
+  // Micro pave shoulder stones for a bridal engagement style.
+  if (shoulderStoneCount > 0) {
+    const shoulderStoneGeometry = new THREE.SphereGeometry(diamondSize * 0.08, 10, 10);
+    const shoulderStoneMaterial = diamondMaterial.clone();
+    const arcStart = -Math.PI * 0.2;
+    const arcEnd = Math.PI * 0.2;
+    const baseY = radius * 0.95;
+
+    for (let i = 0; i < shoulderStoneCount; i += 1) {
+      const t = shoulderStoneCount === 1 ? 0.5 : i / (shoulderStoneCount - 1);
+      const a = THREE.MathUtils.lerp(arcStart, arcEnd, t);
+      const x = Math.sin(a) * (radius * 0.9);
+      const y = baseY + Math.cos(a) * (tube * 0.34);
+      const z = Math.cos(a) * (radius * 0.18);
+
+      const leftStone = new THREE.Mesh(shoulderStoneGeometry, shoulderStoneMaterial);
+      leftStone.position.set(-Math.abs(x), y, z);
+      group.add(leftStone);
+
+      const rightStone = new THREE.Mesh(shoulderStoneGeometry, shoulderStoneMaterial.clone());
+      rightStone.position.set(Math.abs(x), y, z);
+      group.add(rightStone);
+    }
+  }
+
+  const prongGeometry = new THREE.CylinderGeometry(prongRadius, prongRadius * 1.12, prongHeight, 8);
+  const prongMaterial = bandMaterial.clone();
+  const prongTopY = diamondSize * 0.55;
+  const prongCount = 6;
+
+  for (let i = 0; i < prongCount; i += 1) {
+    const angle = (Math.PI * 2 * i) / prongCount;
+    const x = Math.cos(angle) * (diamondSize * 0.43);
+    const z = Math.sin(angle) * (diamondSize * 0.43);
+    const prong = new THREE.Mesh(prongGeometry, prongMaterial);
+    prong.position.set(x, prongTopY, z);
+    prong.lookAt(0, diamondSize * 0.7, 0);
+    settingGroup.add(prong);
+  }
+
+  return group;
+}
+
+function initOpeningLoaderRings3D(durationMs = OPENING_TIMELINE.totalMs) {
+  if (PREFERS_REDUCED_MOTION.matches || !rings3dLoaderContainer || typeof window.THREE === "undefined") {
     return;
   }
 
-  const show = new FireworksShow(fireworksCanvas);
-  show.start();
+  const { THREE } = window;
+  const width = rings3dLoaderContainer.clientWidth || 160;
+  const height = rings3dLoaderContainer.clientHeight || 100;
+
+  const scene = new THREE.Scene();
+  const loaderEnvMap = new THREE.CubeTextureLoader().load([
+    "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg"
+  ]);
+  scene.environment = loaderEnvMap;
+  const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 30);
+  camera.position.set(0, 0.1, 4.3);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(width, height);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  rings3dLoaderContainer.appendChild(renderer.domElement);
+
+  const ring1 = createDiamondRingModel(THREE, {
+    radius: 0.8,
+    tube: 0.085,
+    bandColor: 0xf0c65b,
+    diamondSize: 0.24,
+    prongRadius: 0.012,
+    prongHeight: 0.13,
+    envMap: loaderEnvMap,
+    envMapIntensity: 1.45,
+    shoulderStoneCount: 4
+  });
+  ring1.position.set(-1.45, 0.05, 0);
+  ring1.rotation.set(0.98, 0.34, 0.2);
+
+  const ring2 = createDiamondRingModel(THREE, {
+    radius: 0.8,
+    tube: 0.085,
+    bandColor: 0xe6bc50,
+    diamondSize: 0.24,
+    prongRadius: 0.012,
+    prongHeight: 0.13,
+    envMap: loaderEnvMap,
+    envMapIntensity: 1.45,
+    shoulderStoneCount: 4
+  });
+  ring2.position.set(1.45, -0.05, 0);
+  ring2.rotation.set(0.98, -0.34, -0.2);
+
+  scene.add(ring1);
+  scene.add(ring2);
+
+  scene.add(new THREE.AmbientLight(0xfff1ce, 0.95));
+  const keyLight = new THREE.DirectionalLight(0xffe2a7, 1.45);
+  keyLight.position.set(2.8, 2.2, 3.6);
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight(0xffe0a0, 0.7);
+  fillLight.position.set(-2.4, 1.6, 2.8);
+  scene.add(fillLight);
+
+  const startTime = performance.now();
+  const introDuration = Math.min(1700, durationMs - 320);
+  const easeOutCubic = (t) => 1 - (1 - t) ** 3;
+  let rafId = 0;
+  let stopped = false;
+
+  const stop = () => {
+    if (stopped) {
+      return;
+    }
+    stopped = true;
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+    renderer.dispose();
+    if (renderer.domElement.parentNode === rings3dLoaderContainer) {
+      rings3dLoaderContainer.removeChild(renderer.domElement);
+    }
+  };
+
+  const animate = () => {
+    if (stopped) {
+      return;
+    }
+
+    const elapsed = performance.now() - startTime;
+    const t = Math.min(1, elapsed / introDuration);
+    const eased = easeOutCubic(t);
+
+    ring1.position.x = THREE.MathUtils.lerp(-1.45, -0.42, eased);
+    ring2.position.x = THREE.MathUtils.lerp(1.45, 0.42, eased);
+
+    if (t >= 1) {
+      ring1.rotation.y += 0.003;
+      ring2.rotation.y -= 0.0028;
+      ring1.rotation.x += 0.0009;
+      ring2.rotation.x += 0.0009;
+    }
+
+    renderer.render(scene, camera);
+    rafId = requestAnimationFrame(animate);
+  };
+
+  animate();
+  window.setTimeout(stop, durationMs + 120);
 }
 
 function initLanguageToggle() {
@@ -464,8 +746,158 @@ function initLanguageToggle() {
   applyTranslations();
 }
 
-initPremiumOpening();
-initOpeningFireworks();
+function initRings3D(options = {}) {
+  if (!rings3dPremiumContainer || typeof window.THREE === "undefined") {
+    return;
+  }
+
+  const reducedMotion = PREFERS_REDUCED_MOTION.matches;
+  const { THREE } = window;
+  const width = rings3dPremiumContainer.clientWidth || 420;
+  const height = rings3dPremiumContainer.clientHeight || 300;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+  camera.position.set(0, 0.24, 5.9);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(width, height);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.physicallyCorrectLights = true;
+  rings3dPremiumContainer.appendChild(renderer.domElement);
+
+  const envMap = new THREE.CubeTextureLoader().load([
+    "https://threejs.org/examples/textures/cube/Bridge2/posx.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/negx.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/posy.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/negy.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/posz.jpg",
+    "https://threejs.org/examples/textures/cube/Bridge2/negz.jpg"
+  ]);
+  scene.environment = envMap;
+
+  const ring1 = createDiamondRingModel(THREE, {
+    radius: 1.02,
+    tube: 0.11,
+    bandColor: 0xffd460,
+    diamondSize: 0.5,
+    prongRadius: 0.017,
+    prongHeight: 0.28,
+    envMap,
+    envMapIntensity: 1.9,
+    shoulderStoneCount: 8
+  });
+  ring1.position.set(-2.3, 0.06, 0);
+  ring1.rotation.set(0.86, 0.34, 0.2);
+
+  const ring2 = createDiamondRingModel(THREE, {
+    radius: 1.02,
+    tube: 0.11,
+    bandColor: 0xf6cb58,
+    diamondSize: 0.5,
+    prongRadius: 0.017,
+    prongHeight: 0.28,
+    envMap,
+    envMapIntensity: 1.9,
+    shoulderStoneCount: 8
+  });
+  ring2.position.set(2.3, -0.06, 0);
+  ring2.rotation.set(0.86, -0.34, -0.2);
+
+  scene.add(ring1);
+  scene.add(ring2);
+
+  const ambient = new THREE.AmbientLight(0xfff3d6, 0.42);
+  scene.add(ambient);
+
+  const keyLight = new THREE.DirectionalLight(0xffd88a, 2.1);
+  keyLight.position.set(4.6, 3.4, 4.8);
+  scene.add(keyLight);
+
+  const fillLight = new THREE.DirectionalLight(0xfff1c1, 1.4);
+  fillLight.position.set(-4.8, 2.8, 3.6);
+  scene.add(fillLight);
+
+  const backLight = new THREE.DirectionalLight(0x7a1f2f, 0.95);
+  backLight.position.set(0, -2.4, -4.5);
+  scene.add(backLight);
+
+  const sparkleLight = new THREE.PointLight(0xffe2a3, 22, 7.5, 2);
+  sparkleLight.position.set(0, 0.45, 1.6);
+  scene.add(sparkleLight);
+
+  const diamondSparkA = new THREE.PointLight(0xe9f4ff, 10, 4.2, 2);
+  diamondSparkA.position.set(0.5, 1.55, 1.1);
+  scene.add(diamondSparkA);
+
+  const diamondSparkB = new THREE.PointLight(0xdde9ff, 8, 3.8, 2);
+  diamondSparkB.position.set(-0.8, 1.15, -0.2);
+  scene.add(diamondSparkB);
+
+  const renderScene = () => {
+    renderer.render(scene, camera);
+  };
+
+  const onResize = () => {
+    const nextWidth = rings3dPremiumContainer.clientWidth || 420;
+    const nextHeight = rings3dPremiumContainer.clientHeight || 300;
+    camera.aspect = nextWidth / nextHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(nextWidth, nextHeight);
+    renderScene();
+  };
+
+  window.addEventListener("resize", onResize, { passive: true });
+
+  const interlockedPose = () => {
+    ring1.position.set(-0.7, 0.04, 0);
+    ring2.position.set(0.7, -0.04, 0);
+  };
+
+  if (reducedMotion) {
+    interlockedPose();
+    renderScene();
+    return;
+  }
+
+  const glowAtMs = options.glowAtMs ?? 1220;
+  const startTime = performance.now();
+
+  const animate = () => {
+    const elapsed = performance.now() - startTime;
+    interlockedPose();
+
+    if (elapsed >= glowAtMs && !rings3dPremiumContainer.classList.contains("pulse-glow")) {
+      rings3dPremiumContainer.classList.add("pulse-glow");
+      window.setTimeout(() => rings3dPremiumContainer.classList.remove("pulse-glow"), 520);
+    }
+
+    ring1.rotation.y += 0.0018;
+    ring1.rotation.x += 0.001;
+    ring1.rotation.z += 0.00045;
+    ring2.rotation.y -= 0.0017;
+    ring2.rotation.x += 0.0011;
+    ring2.rotation.z -= 0.0004;
+    sparkleLight.intensity = 15.5 + Math.sin(performance.now() * 0.0022) * 1.4;
+    diamondSparkA.intensity = 8.5 + Math.sin(performance.now() * 0.004) * 1.2;
+    diamondSparkB.intensity = 7 + Math.cos(performance.now() * 0.0035) * 1.1;
+
+    renderScene();
+    requestAnimationFrame(animate);
+  };
+
+  animate();
+}
+
+const openingDurationMs = initPremiumOpening();
+initOpeningLoaderRings3D(openingDurationMs);
+initOpeningFireworks({
+  startDelayMs: openingDurationMs + 120,
+  launchDurationMs: 2500,
+  launchIntervalMs: 260,
+  doubleLaunchChance: 0.22
+});
 startCountdown();
 initLanguageToggle();
 initActiveNav();

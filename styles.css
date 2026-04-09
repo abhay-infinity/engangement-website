@@ -148,6 +148,29 @@ section {
   overflow: hidden;
 }
 
+#rings-3d-premium-container {
+  width: min(460px, 95vw);
+  height: 300px;
+  margin: 0 auto 6px;
+  position: relative;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: 24px;
+  transition: box-shadow 0.7s ease;
+}
+
+#rings-3d-premium-container.pulse-glow {
+  box-shadow:
+    inset 0 0 30px rgba(255, 215, 0, 0.18),
+    0 0 38px rgba(255, 196, 72, 0.34);
+}
+
+#rings-3d-premium-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
 .toran {
   display: flex;
   justify-content: center;
@@ -477,11 +500,14 @@ footer {
   display: grid;
   place-items: center;
   z-index: 2000;
-  transition: opacity 0.7s ease, visibility 0.7s ease;
+  opacity: 1;
+  filter: blur(0);
+  transition: opacity 520ms ease, filter 520ms ease, visibility 520ms ease;
 }
 
 .page-loader.hidden {
   opacity: 0;
+  filter: blur(3px);
   visibility: hidden;
   pointer-events: none;
 }
@@ -492,45 +518,112 @@ footer {
   gap: 14px;
 }
 
-.diya-loader {
-  width: 92px;
-  height: 92px;
+.ceremony-loader {
   position: relative;
-  animation: loaderBloom 2.6s ease-in-out infinite;
+  width: 160px;
+  height: 100px;
+  transform: translateZ(0);
+  will-change: transform, filter;
 }
 
-.flame {
+#rings-3d-loader {
   position: absolute;
-  left: 50%;
-  top: 20px;
-  width: 18px;
-  height: 32px;
-  transform: translateX(-50%);
-  border-radius: 50% 50% 45% 45%;
-  background: radial-gradient(circle at 50% 35%, #fff5b0 0%, #ffcc56 42%, #eb7f1f 84%);
-  filter: drop-shadow(0 0 12px rgba(255, 183, 62, 0.66));
-  animation: flameFlicker 1.2s ease-in-out infinite;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.bowl {
+#rings-3d-loader canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  opacity: 0.95;
+}
+
+.page-loader.phase-intro .ceremony-loader {
+  animation: loaderBreath 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.page-loader.phase-highlight .ceremony-loader {
+  animation: loaderHighlight 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.page-loader.exit .ceremony-loader {
+  animation: loaderSettle 0.42s ease forwards;
+}
+
+.ring {
   position: absolute;
-  left: 50%;
-  bottom: 18px;
-  width: 76px;
-  height: 28px;
-  transform: translateX(-50%);
-  border-radius: 0 0 100px 100px;
-  background: linear-gradient(180deg, #e7bc72, #b36f18);
-  box-shadow: 0 0 14px rgba(212, 175, 55, 0.44);
+  top: 14px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 6px solid #FFD700;
+  box-shadow:
+    inset -2px -2px 5px rgba(255, 233, 154, 0.95),
+    inset 2px 2px 6px rgba(153, 105, 24, 0.36),
+    0 0 10px rgba(255, 215, 0, 0.35);
+  background: radial-gradient(circle at 30% 25%, rgba(255, 246, 202, 0.2), rgba(255, 215, 0, 0.03));
+  opacity: 0;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  z-index: 1;
+  display: none;
+}
+
+.ring::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -90%;
+  width: 65%;
+  height: 160%;
+  transform: rotate(20deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0)
+  );
+  opacity: 0;
+}
+
+.page-loader.phase-highlight .ring::after {
+  animation: ringSweep 0.62s ease-out both;
+}
+
+.ring-left {
+  left: 8px;
+  animation: ringSlideLeft 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.08s forwards;
+}
+
+.ring-right {
+  right: 8px;
+  animation: ringSlideRight 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.08s forwards;
 }
 
 .loader-text {
   margin: 0;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  font-size: 0.84rem;
   color: var(--primary);
-  font-weight: 600;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 360ms ease, transform 360ms ease;
+}
+
+.page-loader.phase-intro .loader-text,
+.page-loader.phase-highlight .loader-text {
+  opacity: 0.92;
+  transform: translateY(0);
+}
+
+.page-loader.exit .loader-text {
+  opacity: 0;
+  transform: translateY(6px);
 }
 
 .petal-container {
@@ -675,6 +768,11 @@ button:focus-visible {
     gap: 10px;
     font-size: clamp(2rem, 8.3vw, 2.75rem);
   }
+
+  #rings-3d-premium-container {
+    height: 240px;
+    width: min(380px, 96vw);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -731,15 +829,6 @@ button:focus-visible {
   }
 }
 
-@keyframes spinLoader {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes buttonShine {
   0%,
   20% {
@@ -751,23 +840,76 @@ button:focus-visible {
   }
 }
 
-@keyframes loaderBloom {
-  0%,
-  100% {
-    transform: scale(1) rotate(0deg);
+@keyframes ringSlideLeft {
+  from {
+    transform: translateX(-54px) rotate(-9deg) scale(0.94);
+    opacity: 0;
   }
-  50% {
-    transform: scale(1.08) rotate(6deg);
+  to {
+    transform: translateX(15px) rotate(0deg) scale(1);
+    opacity: 1;
   }
 }
 
-@keyframes flameFlicker {
-  0%,
-  100% {
-    transform: translateX(-50%) scale(1) rotate(-2deg);
+@keyframes ringSlideRight {
+  from {
+    transform: translateX(54px) rotate(9deg) scale(0.94);
+    opacity: 0;
   }
-  50% {
-    transform: translateX(-50%) scale(1.07) rotate(2deg);
+  to {
+    transform: translateX(-15px) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes loaderBreath {
+  from {
+    transform: scale(0.98);
+    filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+  }
+  to {
+    transform: scale(1);
+    filter: drop-shadow(0 0 9px rgba(255, 215, 0, 0.34));
+  }
+}
+
+@keyframes loaderHighlight {
+  0% {
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.34));
+    transform: scale(1);
+  }
+  55% {
+    filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.4));
+    transform: scale(1.015);
+  }
+  100% {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.26));
+    transform: scale(1);
+  }
+}
+
+@keyframes loaderSettle {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.15;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes ringSweep {
+  from {
+    left: -90%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  to {
+    left: 140%;
+    opacity: 0;
   }
 }
 
