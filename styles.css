@@ -175,7 +175,7 @@ section {
   overflow: hidden;
   max-width: 820px;
   margin: 0 auto 10px;
-  padding: 26px 20px 22px;
+  padding: 29px 20px 22px;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(248, 245, 247, 0.9));
   border: 1px solid rgba(128, 97, 109, 0.2);
   border-radius: 22px;
@@ -378,16 +378,16 @@ h2 {
   aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 10px;
-  opacity: 0.55;
-  filter: saturate(0.78) contrast(0.94) brightness(0.96);
+  opacity: 0.88;
+  filter: saturate(0.95) contrast(1.02) brightness(1.02);
   border: 1px solid rgba(230, 215, 210, 0.75);
   box-shadow: 0 4px 12px rgba(45, 22, 42, 0.08);
   transition: opacity 240ms ease, filter 240ms ease;
 }
 
 .moments-track img:hover {
-  opacity: 0.72;
-  filter: saturate(0.95) contrast(0.98) brightness(1);
+  opacity: 1;
+  filter: saturate(1.05) contrast(1.04) brightness(1.04);
 }
 
 .decorated {
@@ -861,7 +861,7 @@ button:focus-visible {
 
   .hero {
     min-height: auto;
-    padding: 20px 14px 18px;
+    padding: 23px 14px 18px;
     gap: 7px;
     border-radius: 18px;
     margin-bottom: 12px;
@@ -911,7 +911,7 @@ button:focus-visible {
   .moments-strip {
     padding-top: 8px;
     padding-bottom: 14px;
-    opacity: 0.8;
+    opacity: 1;
   }
 
   .moments-track {
@@ -919,8 +919,8 @@ button:focus-visible {
   }
 
   .moments-track img {
-    opacity: 0.42;
-    filter: saturate(0.6) contrast(0.92) brightness(0.98);
+    opacity: 0.82;
+    filter: saturate(0.92) contrast(1) brightness(1.02);
   }
 
   .corner-lottie {

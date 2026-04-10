@@ -24,7 +24,8 @@ const translations = {
     loader: "Preparing a Shubh Beginning...",
     timeDays: "Days", timeHours: "Hours", timeMins: "Minutes left",
     ceremonyStarted: "Ceremony started - welcome to the celebration!",
-    btnText: "અંગ્રેજી (English)",
+    btnText: "ગુજરાતી",
+    langToggleAria: "Open this invitation in Gujarati",
     mapFallback: "If the map does not load, use this direct link:",
     openMaps: "Open Google Maps",
     openMapsBtn: "Open in Google Maps"
@@ -48,14 +49,27 @@ const translations = {
     loader: "ઉજવણીની તૈયારી થઈ રહી છે",
     timeDays: "દિવસ", timeHours: "કલાક", timeMins: "મિનિટ બાકી",
     ceremonyStarted: "સમારંભ શરૂ થઈ ગયો છે - ઉજવણીમાં તમારું સ્વાગત છે!",
-    btnText: "ગુજરાતી (Gujarati)",
+    btnText: "English",
+    langToggleAria: "આ આમંત્રણ અંગ્રેજીમાં ખોલો",
     mapFallback: "જો નકશો ન ખૂલે, તો આ સીધી લિંકનો ઉપયોગ કરો:",
     openMaps: "Google Maps ખોલો",
     openMapsBtn: "Google Maps માં ખોલો"
   }
 };
 
-let currentLang = "en";
+function isGujaratiPath() {
+  try {
+    const segments = (window.location.pathname || "")
+      .toLowerCase()
+      .split("/")
+      .filter(Boolean);
+    return segments.includes("gujarati");
+  } catch {
+    return false;
+  }
+}
+
+let currentLang = isGujaratiPath() ? "gu" : "en";
 
 const countdownElement = document.getElementById("countdown");
 const pageLoader = document.getElementById("page-loader");
@@ -323,11 +337,19 @@ function applyTranslations() {
     }
     element.textContent = dictionary[key];
   });
+
+  document.documentElement.lang = currentLang === "gu" ? "gu" : "en";
+
+  if (langToggleButton && dictionary.langToggleAria) {
+    langToggleButton.setAttribute("aria-label", dictionary.langToggleAria);
+  }
 }
 
-function toggleLanguage() {
-  currentLang = currentLang === "en" ? "gu" : "en";
-  applyTranslations();
+function navigateToAlternateLanguage() {
+  const targetUrl = isGujaratiPath()
+    ? new URL("../", window.location.href).href
+    : new URL("gujarati/", window.location.href).href;
+  window.location.assign(targetUrl);
 }
 
 function initActiveNav() {
@@ -785,7 +807,7 @@ function initLanguageToggle() {
   if (!langToggleButton) {
     return;
   }
-  langToggleButton.addEventListener("click", toggleLanguage);
+  langToggleButton.addEventListener("click", navigateToAlternateLanguage);
   applyTranslations();
 }
 
