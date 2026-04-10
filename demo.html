@@ -25,9 +25,114 @@
   <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
   <div id="page-loader" class="page-loader" aria-hidden="true">
     <div class="loader-inner">
-      <div class="diya-loader" aria-hidden="true">
-        <span class="flame"></span>
-        <span class="bowl"></span>
+      <div class="ceremony-loader jl-entrance" aria-hidden="true">
+        <div class="jl-entrance__stage">
+          <svg class="jl-entrance__heart-svg" viewBox="0 0 400 360" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="jlHeartStrokeGradDemo" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ffb3c8"/>
+                <stop offset="28%" stop-color="#ff3b5c"/>
+                <stop offset="62%" stop-color="#d01035"/>
+                <stop offset="100%" stop-color="#ff7a92"/>
+              </linearGradient>
+              <radialGradient id="jlHeartFillGradDemo" cx="42%" cy="32%" r="58%">
+                <stop offset="0%" stop-color="rgba(255, 200, 210, 0.55)"/>
+                <stop offset="45%" stop-color="rgba(255, 120, 150, 0.22)"/>
+                <stop offset="100%" stop-color="rgba(200, 40, 80, 0.06)"/>
+              </radialGradient>
+              <radialGradient id="jlSparkleGradDemo" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fff8fb"/>
+                <stop offset="45%" stop-color="#ffb8cc"/>
+                <stop offset="100%" stop-color="rgba(255, 80, 120, 0)"/>
+              </radialGradient>
+              <filter id="jlHeartGlowFilterDemo" x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b"/>
+                <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="b2"/>
+                <feMerge>
+                  <feMergeNode in="b2"/>
+                  <feMergeNode in="b"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <path
+              class="jl-entrance__heart-bloom"
+              pathLength="100"
+              fill="url(#jlHeartFillGradDemo)"
+              d="M200 328 C52 198 14 132 14 84 C14 30 66 -6 126 12 C162 26 188 58 200 96 C212 58 238 26 274 12 C334 -6 386 30 386 84 C386 132 348 198 200 328 Z"
+            />
+            <path
+              class="jl-entrance__heart-echo"
+              pathLength="100"
+              fill="none"
+              stroke="rgba(255, 160, 180, 0.45)"
+              stroke-width="9"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M200 328 C52 198 14 132 14 84 C14 30 66 -6 126 12 C162 26 188 58 200 96 C212 58 238 26 274 12 C334 -6 386 30 386 84 C386 132 348 198 200 328 Z"
+            />
+            <path
+              class="jl-entrance__heart-stroke jl-entrance__heart-stroke--main"
+              pathLength="100"
+              fill="none"
+              stroke="url(#jlHeartStrokeGradDemo)"
+              stroke-width="4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              filter="url(#jlHeartGlowFilterDemo)"
+              d="M200 328 C52 198 14 132 14 84 C14 30 66 -6 126 12 C162 26 188 58 200 96 C212 58 238 26 274 12 C334 -6 386 30 386 84 C386 132 348 198 200 328 Z"
+            />
+            <g class="jl-entrance__sparkles" fill="url(#jlSparkleGradDemo)">
+              <circle class="jl-entrance__sparkle" cx="200" cy="18" r="3.2"/>
+              <circle class="jl-entrance__sparkle" cx="72" cy="58" r="2.6"/>
+              <circle class="jl-entrance__sparkle" cx="328" cy="58" r="2.6"/>
+              <circle class="jl-entrance__sparkle" cx="28" cy="128" r="2.4"/>
+              <circle class="jl-entrance__sparkle" cx="372" cy="128" r="2.4"/>
+              <circle class="jl-entrance__sparkle" cx="118" cy="218" r="2.2"/>
+              <circle class="jl-entrance__sparkle" cx="282" cy="218" r="2.2"/>
+              <circle class="jl-entrance__sparkle" cx="200" cy="288" r="2.8"/>
+            </g>
+          </svg>
+          <div class="jl-entrance__letters">
+            <span class="jl-entrance__j">J</span>
+            <span class="jl-entrance__ring" aria-hidden="true">
+              <svg class="jl-entrance__ring-svg" viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg" fill="none" focusable="false">
+                <defs>
+                  <linearGradient id="jlRingMetalGradDemo" x1="6%" y1="8%" x2="94%" y2="92%">
+                    <stop offset="0%" stop-color="#fffbf2"/>
+                    <stop offset="26%" stop-color="#edd29a"/>
+                    <stop offset="52%" stop-color="#c4934a"/>
+                    <stop offset="78%" stop-color="#8f642e"/>
+                    <stop offset="100%" stop-color="#5c3d1c"/>
+                  </linearGradient>
+                  <radialGradient id="jlRingGemRadialDemo" cx="32%" cy="30%" r="72%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="38%" stop-color="#fff2f8"/>
+                    <stop offset="100%" stop-color="#d898b4"/>
+                  </radialGradient>
+                  <linearGradient id="jlRingProngGradDemo" x1="50%" y1="0%" x2="50%" y2="100%">
+                    <stop offset="0%" stop-color="#f2ddae"/>
+                    <stop offset="100%" stop-color="#a67a38"/>
+                  </linearGradient>
+                </defs>
+                <ellipse cx="40" cy="91" rx="24" ry="3.2" fill="rgba(70,38,32,0.12)"/>
+                <ellipse cx="40" cy="58" rx="29" ry="14.5" fill="none" stroke="url(#jlRingMetalGradDemo)" stroke-width="13" stroke-linejoin="round"/>
+                <ellipse cx="40" cy="58" rx="21" ry="9.5" fill="none" stroke="rgba(255,250,242,0.55)" stroke-width="1.35"/>
+                <ellipse cx="40" cy="58" rx="22.5" ry="10.2" fill="none" stroke="rgba(42,26,12,0.32)" stroke-width="0.9"/>
+                <path fill="url(#jlRingProngGradDemo)" d="M30 48 L34 34 L46 34 L50 48 C44 45.5 36 45.5 30 48Z"/>
+                <path stroke="url(#jlRingProngGradDemo)" stroke-width="2" stroke-linecap="round" d="M34 34 L32 22 M46 34 L48 22 M38 34 L38 18 M42 34 L42 18"/>
+                <path fill="url(#jlRingGemRadialDemo)" stroke="rgba(120,78,88,0.42)" stroke-width="0.55"
+                  d="M40 6 L56 22 L50 34 L30 34 L24 22 Z"/>
+                <path fill="rgba(255,255,255,0.82)" d="M40 10 L52 22 L40 28 L28 22 Z"/>
+                <path fill="rgba(220,130,165,0.22)" d="M40 22 L48 30 L32 30 Z"/>
+                <path stroke="rgba(170,100,125,0.38)" stroke-width="0.4"
+                  d="M40 10 L40 30 M28 22 L52 22 M32 16 L48 26 M48 16 L32 26"/>
+              </svg>
+            </span>
+            <span class="jl-entrance__d">D</span>
+          </div>
+        </div>
+        <p class="jl-entrance__tagline">love</p>
       </div>
       <p class="loader-text">Preparing a Shubh Beginning...</p>
     </div>
@@ -193,6 +298,13 @@
   </main>
 
   <!-- <button id="lang-toggle" class="floating-cta" type="button" aria-label="Toggle website language" data-i18n-key="btnText">ગુજરાતી</button> -->
+
+  <button id="music-toggle" class="floating-music" type="button" aria-pressed="false" aria-label="Mute background music" title="Background music">
+    <span class="floating-music__icon" aria-hidden="true">♪</span>
+  </button>
+  <audio id="bg-music" preload="auto" loop playsinline>
+    <source src="audio/engangement_audio.mp3" type="audio/mpeg">
+  </audio>
 
   <footer>
     Made with love for our special day.

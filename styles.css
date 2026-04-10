@@ -182,29 +182,6 @@ section {
   box-shadow: 0 10px 28px rgba(44, 20, 20, 0.08);
 }
 
-#rings-3d-premium-container {
-  width: min(460px, 95vw);
-  height: 300px;
-  margin: 0 auto 6px;
-  position: relative;
-  z-index: 3;
-  pointer-events: none;
-  border-radius: 24px;
-  transition: box-shadow 0.7s ease;
-}
-
-#rings-3d-premium-container.pulse-glow {
-  box-shadow:
-    inset 0 0 30px rgba(212, 175, 55, 0.2),
-    0 0 38px rgba(184, 79, 59, 0.26);
-}
-
-#rings-3d-premium-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
 .toran {
   display: flex;
   justify-content: center;
@@ -598,6 +575,40 @@ iframe {
   z-index: 4;
 }
 
+.floating-music {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  background: linear-gradient(155deg, #ffffff, #f7eff3);
+  border: 1px solid rgba(184, 79, 59, 0.32);
+  color: var(--primary);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  font-family: inherit;
+  z-index: 4;
+  transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.floating-music:hover {
+  transform: scale(1.05);
+  border-color: rgba(201, 168, 108, 0.55);
+}
+
+.floating-music.is-muted {
+  opacity: 0.5;
+}
+
+.floating-music__icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
 footer {
   text-align: center;
   padding: 24px 16px 30px;
@@ -610,8 +621,10 @@ footer {
   background:
     radial-gradient(circle at 30% 18%, rgba(239, 228, 234, 0.55), transparent 35%),
     linear-gradient(145deg, #ffffff, #f6eff2);
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0 max(0, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(0, env(safe-area-inset-left));
   z-index: 2000;
   opacity: 1;
   filter: blur(0);
@@ -626,31 +639,288 @@ footer {
 }
 
 .loader-inner {
+  flex: 1;
   display: grid;
-  place-items: center;
-  gap: 14px;
+  grid-template-rows: 1fr auto;
+  justify-items: center;
+  align-content: stretch;
+  width: 100%;
+  min-height: 0;
+  gap: 0;
+}
+
+.loader-inner .ceremony-loader {
+  align-self: center;
 }
 
 .ceremony-loader {
   position: relative;
-  width: 160px;
-  height: 100px;
+  width: min(560px, 96vw);
   transform: translateZ(0);
   will-change: transform, filter;
 }
 
-#rings-3d-loader {
+.jl-entrance__stage {
+  position: relative;
+  width: 100%;
+  min-height: clamp(240px, 38vh, 340px);
+  padding: 12px 8px 24px;
+  overflow: visible;
+}
+
+.jl-entrance__heart-svg {
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  left: 50%;
+  top: 50%;
+  width: min(118%, 580px);
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.jl-entrance__heart-bloom {
+  opacity: 0;
+  transform: scale(0.88);
+  transform-origin: 50% 48%;
+  transform-box: fill-box;
+}
+
+.page-loader:not(.hidden) .jl-entrance__heart-bloom {
+  animation: jlHeartBloomReveal 1.12s cubic-bezier(0.22, 1, 0.36, 1) 1.92s forwards;
+}
+
+@keyframes jlHeartBloomReveal {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.jl-entrance__heart-echo {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0.95;
+}
+
+.page-loader:not(.hidden) .jl-entrance__heart-echo {
+  animation: jlHeartDrawEcho 1.58s cubic-bezier(0.33, 0.06, 0.12, 1) 0.7s forwards;
+}
+
+.jl-entrance__heart-stroke--main {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+.page-loader:not(.hidden) .jl-entrance__heart-stroke--main {
+  animation: jlHeartDrawMain 1.48s cubic-bezier(0.26, 0.08, 0.12, 1) 0.84s forwards;
+}
+
+@keyframes jlHeartDrawEcho {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes jlHeartDrawMain {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.jl-entrance__sparkles {
   pointer-events: none;
 }
 
-#rings-3d-loader canvas {
-  width: 100% !important;
-  height: 100% !important;
+.jl-entrance__sparkle {
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle {
+  animation: jlSparklePop 0.82s cubic-bezier(0.32, 1.55, 0.48, 1) forwards;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(1) {
+  animation-delay: 2.02s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(2) {
+  animation-delay: 2.08s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(3) {
+  animation-delay: 2.08s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(4) {
+  animation-delay: 2.14s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(5) {
+  animation-delay: 2.14s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(6) {
+  animation-delay: 2.2s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(7) {
+  animation-delay: 2.2s;
+}
+
+.page-loader:not(.hidden) .jl-entrance__sparkle:nth-child(8) {
+  animation-delay: 2.26s;
+}
+
+@keyframes jlSparklePop {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-22deg);
+  }
+
+  55% {
+    opacity: 1;
+    transform: scale(1.2) rotate(8deg);
+  }
+
+  100% {
+    opacity: 0.95;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.jl-entrance__letters {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 4.5vw, 2rem);
+  min-height: clamp(200px, 32vh, 300px);
+  padding: 0 8px;
+}
+
+.jl-entrance__j,
+.jl-entrance__d {
+  display: inline-block;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-size: clamp(4rem, 19vw, 9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  padding: 0.04em 0 0.1em;
+  background: linear-gradient(162deg, #2a0c14 0%, #a64555 42%, #e8c49a 88%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  /* Centered glow only — offset downward shadows smear behind J’s hook and read like an “I”. */
+  filter: drop-shadow(0 0 22px rgba(122, 31, 47, 0.14));
+}
+
+.page-loader:not(.hidden) .jl-entrance__j {
+  animation: jlSlideFromLeft 1.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.page-loader:not(.hidden) .jl-entrance__d {
+  animation: jlSlideFromRight 1.22s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+.jl-entrance__ring {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.65rem, 9vw, 4.1rem);
+  margin: 0 clamp(-0.15rem, -0.5vw, 0);
+  opacity: 0;
+  transform: scale(0.45);
+  aspect-ratio: 80 / 96;
+  filter: drop-shadow(0 3px 12px rgba(201, 168, 108, 0.42));
+}
+
+.jl-entrance__ring-svg {
   display: block;
-  opacity: 0.95;
+  width: 100%;
+  height: auto;
+}
+
+.page-loader:not(.hidden) .jl-entrance__ring {
+  animation: jlRingReveal 0.78s cubic-bezier(0.34, 1.2, 0.48, 1) 0.58s forwards;
+}
+
+@keyframes jlRingReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.45) rotate(-12deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes jlSlideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(calc(-52vw - 14%), 0, 0) scale(0.78) rotate(-5deg);
+    filter: blur(3px) drop-shadow(0 0 18px rgba(122, 31, 47, 0.1));
+  }
+
+  65% {
+    filter: blur(0) drop-shadow(0 0 26px rgba(122, 31, 47, 0.16));
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 22px rgba(122, 31, 47, 0.14));
+  }
+}
+
+@keyframes jlSlideFromRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(calc(52vw + 14%), 0, 0) scale(0.78) rotate(5deg);
+    filter: blur(3px) drop-shadow(0 0 18px rgba(122, 31, 47, 0.1));
+  }
+
+  65% {
+    filter: blur(0) drop-shadow(0 0 26px rgba(122, 31, 47, 0.16));
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 22px rgba(122, 31, 47, 0.14));
+  }
+}
+
+.jl-entrance__tagline {
+  margin: 14px 0 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.48em;
+  text-transform: lowercase;
+  text-align: center;
+  color: rgba(122, 31, 47, 0.58);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.45s, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.45s;
+}
+
+.page-loader.phase-intro .jl-entrance__tagline,
+.page-loader.phase-highlight .jl-entrance__tagline {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .page-loader.phase-intro .ceremony-loader {
@@ -665,59 +935,13 @@ footer {
   animation: loaderSettle 0.42s ease forwards;
 }
 
-.ring {
-  position: absolute;
-  top: 14px;
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 6px solid #e2c9ad;
-  box-shadow:
-    inset -2px -2px 5px rgba(255, 248, 238, 0.9),
-    inset 2px 2px 6px rgba(92, 58, 72, 0.28),
-    0 0 10px rgba(201, 168, 108, 0.4);
-  background: radial-gradient(circle at 30% 25%, rgba(240, 228, 210, 0.35), rgba(201, 168, 108, 0.06));
-  opacity: 0;
-  overflow: hidden;
-  transform: translateZ(0);
-  will-change: transform, opacity;
-  z-index: 1;
-  display: none;
-}
-
-.ring::after {
-  content: "";
-  position: absolute;
-  top: -30%;
-  left: -90%;
-  width: 65%;
-  height: 160%;
-  transform: rotate(20deg);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0)
-  );
-  opacity: 0;
-}
-
-.page-loader.phase-highlight .ring::after {
-  animation: ringSweep 0.62s ease-out both;
-}
-
-.ring-left {
-  left: 8px;
-  animation: ringSlideLeft 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.08s forwards;
-}
-
-.ring-right {
-  right: 8px;
-  animation: ringSlideRight 0.95s cubic-bezier(0.22, 1, 0.36, 1) 0.08s forwards;
-}
-
 .loader-text {
   margin: 0;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0 1rem 0.35rem;
+  box-sizing: border-box;
+  text-align: center;
   letter-spacing: 0.03em;
   text-transform: none;
   font-size: 0.84rem;
@@ -885,6 +1109,13 @@ button:focus-visible {
     font-size: 0.92rem;
   }
 
+  .floating-music {
+    left: 12px;
+    bottom: 12px;
+    width: 44px;
+    height: 44px;
+  }
+
   .names {
     gap: 8px;
     font-size: clamp(2.25rem, 9.6vw, 3rem);
@@ -901,11 +1132,6 @@ button:focus-visible {
     padding: 12px 16px;
     font-size: 0.98rem;
     min-width: 100%;
-  }
-
-  #rings-3d-premium-container {
-    height: 240px;
-    width: min(380px, 96vw);
   }
 
   .moments-strip {
@@ -996,50 +1222,36 @@ button:focus-visible {
   }
 }
 
-@keyframes ringSlideLeft {
-  from {
-    transform: translateX(-54px) rotate(-9deg) scale(0.94);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(15px) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-}
-
-@keyframes ringSlideRight {
-  from {
-    transform: translateX(54px) rotate(9deg) scale(0.94);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(-15px) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-}
-
 @keyframes loaderBreath {
   from {
-    transform: scale(0.98);
-    filter: drop-shadow(0 0 0 rgba(201, 168, 108, 0));
+    transform: scale(0.985);
+    filter: drop-shadow(0 0 0 rgba(230, 120, 150, 0));
   }
   to {
     transform: scale(1);
-    filter: drop-shadow(0 0 9px rgba(201, 168, 108, 0.38));
+    filter:
+      drop-shadow(0 0 18px rgba(255, 160, 180, 0.28))
+      drop-shadow(0 0 42px rgba(201, 168, 108, 0.14));
   }
 }
 
 @keyframes loaderHighlight {
   0% {
-    filter: drop-shadow(0 0 10px rgba(201, 168, 108, 0.36));
+    filter:
+      drop-shadow(0 0 12px rgba(255, 150, 175, 0.32))
+      drop-shadow(0 0 28px rgba(201, 168, 108, 0.22));
     transform: scale(1);
   }
   55% {
-    filter: drop-shadow(0 0 14px rgba(201, 168, 108, 0.42));
-    transform: scale(1.015);
+    filter:
+      drop-shadow(0 0 20px rgba(255, 140, 165, 0.4))
+      drop-shadow(0 0 48px rgba(210, 175, 120, 0.26));
+    transform: scale(1.018);
   }
   100% {
-    filter: drop-shadow(0 0 8px rgba(201, 168, 108, 0.28));
+    filter:
+      drop-shadow(0 0 10px rgba(255, 150, 175, 0.26))
+      drop-shadow(0 0 32px rgba(201, 168, 108, 0.18));
     transform: scale(1);
   }
 }
@@ -1052,20 +1264,6 @@ button:focus-visible {
   to {
     opacity: 0.15;
     transform: scale(0.98);
-  }
-}
-
-@keyframes ringSweep {
-  from {
-    left: -90%;
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.5;
-  }
-  to {
-    left: 140%;
-    opacity: 0;
   }
 }
 
