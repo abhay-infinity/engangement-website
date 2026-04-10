@@ -581,31 +581,52 @@ function initBackgroundMusic() {
 
   bgMusic.volume = BG_MUSIC_VOLUME;
   bgMusic.loop = true;
+  bgMusic.setAttribute("playsinline", "");
+  bgMusic.setAttribute("webkit-playsinline", "");
 
   const tryPlay = () => {
     const result = bgMusic.play();
     if (result && typeof result.catch === "function") {
       result.catch(() => {});
     }
+    return result;
   };
 
   tryPlay();
 
-  const resumeIfPaused = () => {
-    if (bgMusic.paused && !bgMusic.muted) {
+  const resumeIfUnlocked = () => {
+    if (bgMusic.muted) {
+      return;
+    }
+    if (bgMusic.paused) {
       tryPlay();
     }
   };
-  document.addEventListener("click", resumeIfPaused, { passive: true });
-  document.addEventListener("touchstart", resumeIfPaused, { passive: true });
-  document.addEventListener("keydown", resumeIfPaused);
+
+  /**
+   * Mobile Safari / Chrome block autoplay until there is a user gesture.
+   * Run in the capture phase on window so we still receive the gesture if a
+   * child calls stopPropagation. (Do not skip the music button: its handler
+   * calls tryPlay() after toggling mute so muted playback can unlock audio.)
+   */
+  const gestureOpts = { capture: true, passive: true };
+  window.addEventListener("pointerdown", resumeIfUnlocked, gestureOpts);
+  window.addEventListener("touchstart", resumeIfUnlocked, gestureOpts);
+  window.addEventListener("touchend", resumeIfUnlocked, gestureOpts);
+  window.addEventListener("click", resumeIfUnlocked, gestureOpts);
+
+  document.addEventListener("keydown", resumeIfUnlocked, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      resumeIfUnlocked();
+    }
+  });
 
   if (!musicToggleButton) {
     return;
   }
 
-  musicToggleButton.addEventListener("click", (event) => {
-    event.stopPropagation();
+  musicToggleButton.addEventListener("click", () => {
     bgMusic.muted = !bgMusic.muted;
     const muted = bgMusic.muted;
     musicToggleButton.setAttribute("aria-pressed", muted ? "true" : "false");
@@ -614,9 +635,12 @@ function initBackgroundMusic() {
       muted ? "Unmute background music" : "Mute background music"
     );
     musicToggleButton.classList.toggle("is-muted", muted);
-    if (!muted) {
-      tryPlay();
-    }
+    /**
+     * Always call play() on toggle: iOS needs a play() tied to the tap. If the
+     * user just muted, muted playback still unlocks the element so the next
+     * unmute can hear audio without a second gesture.
+     */
+    tryPlay();
   });
 }
 
