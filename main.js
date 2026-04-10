@@ -1,7 +1,7 @@
 const EVENT_INFO = {
   couple: "Jaydeep and Dinal",
   eventDateTime: "April 29, 2026 10:00:00",
-  venue: "Gurukul Banquet Hall, Rajkot, Gujarat"
+  venue: "Gurukul Banquet Hall, Dhebar Road, opposite Jimmy Tower, Rajkot, Gujarat - 360002"
 };
 
 const translations = {
