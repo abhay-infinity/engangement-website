@@ -65,6 +65,8 @@ const fireworksCanvas = document.getElementById("fireworks-canvas");
 const langToggleButton = document.getElementById("lang-toggle");
 const rings3dPremiumContainer = document.getElementById("rings-3d-premium-container");
 const rings3dLoaderContainer = document.getElementById("rings-3d-loader");
+const cornerLottieTopLeft = document.getElementById("corner-lottie-tl");
+const cornerLottieBottomRight = document.getElementById("corner-lottie-br");
 
 const PREFERS_REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)");
 const OPENING_TIMELINE = {
@@ -90,7 +92,7 @@ class FireworksShow {
     this.launchIntervalMs = options.launchIntervalMs ?? 220;
     this.doubleLaunchChance = options.doubleLaunchChance ?? 0.35;
     this.finishTimeout = 900;
-    this.colors = ["#FFD700", "#FDB931", "#7A1F2F", "#FF9933"];
+    this.colors = ["#caa27a", "#e2c9ad", "#7a1f2f", "#a64555"];
     this.resizeHandler = this.resize.bind(this);
   }
 
@@ -133,11 +135,18 @@ class FireworksShow {
   }
 
   launchRocket(fromLeft) {
-    const xBase = fromLeft ? this.canvas.width * 0.12 : this.canvas.width * 0.88;
-    const xSpread = fromLeft ? this.canvas.width * 0.08 : -this.canvas.width * 0.08;
+    const isMobile = window.matchMedia("(max-width: 700px)").matches;
+    const xBase = isMobile
+      ? (fromLeft ? this.canvas.width * 0.16 : this.canvas.width * 0.84)
+      : (fromLeft ? this.canvas.width * 0.12 : this.canvas.width * 0.88);
+    const xSpread = isMobile
+      ? (fromLeft ? this.canvas.width * 0.05 : -this.canvas.width * 0.05)
+      : (fromLeft ? this.canvas.width * 0.08 : -this.canvas.width * 0.08);
     const x = xBase + Math.random() * xSpread;
     const y = this.canvas.height + 8;
-    const vx = fromLeft ? 0.9 + Math.random() * 1.2 : -0.9 - Math.random() * 1.2;
+    const vx = isMobile
+      ? (fromLeft ? 0.18 + Math.random() * 0.38 : -0.18 - Math.random() * 0.38)
+      : (fromLeft ? 0.9 + Math.random() * 1.2 : -0.9 - Math.random() * 1.2);
     const vy = -(8.3 + Math.random() * 1.9);
 
     this.rockets.push({
@@ -237,9 +246,17 @@ class FireworksShow {
       this.launchTimer += now - (this.lastLaunchTime || now);
       this.lastLaunchTime = now;
       if (this.launchTimer > this.launchIntervalMs) {
-        this.launchRocket(Math.random() > 0.5);
-        if (Math.random() < this.doubleLaunchChance) {
+        const isMobile = window.matchMedia("(max-width: 700px)").matches;
+
+        if (isMobile) {
+          // Keep one firework stream on each side in mobile view.
+          this.launchRocket(true);
+          this.launchRocket(false);
+        } else {
           this.launchRocket(Math.random() > 0.5);
+          if (Math.random() < this.doubleLaunchChance) {
+            this.launchRocket(Math.random() > 0.5);
+          }
         }
         this.launchTimer = 0;
       }
@@ -428,10 +445,8 @@ function initCursorGlow() {
     const x = Math.round((event.clientX / window.innerWidth) * 100);
     const y = Math.round((event.clientY / window.innerHeight) * 100);
     document.body.style.background = `
-      radial-gradient(circle at ${x}% ${y}%, rgba(255, 226, 232, 0.42), transparent 28%),
-      radial-gradient(circle at 10% 20%, var(--bg-saffron), transparent 30%),
-      radial-gradient(circle at 90% 10%, #ffe2e8, transparent 28%),
-      linear-gradient(145deg, var(--bg-light), var(--bg-ivory))
+      radial-gradient(circle at ${x}% ${y}%, rgba(0, 0, 0, 0.035), transparent 26%),
+      linear-gradient(145deg, #ffffff, #f7f6f8)
     `;
   });
 }
@@ -454,6 +469,34 @@ function initParallaxBackground() {
   window.addEventListener("scroll", onScroll, { passive: true });
 }
 
+function initCornerLotties() {
+  if (typeof window.lottie === "undefined") {
+    return;
+  }
+
+  const targets = [cornerLottieTopLeft, cornerLottieBottomRight].filter(Boolean);
+  if (!targets.length) {
+    return;
+  }
+
+  const autoplay = !PREFERS_REDUCED_MOTION.matches;
+  targets.forEach((container) => {
+    const animationData = window.CORNER_LOTTIE_DATA;
+    const animation = window.lottie.loadAnimation({
+      container,
+      renderer: "svg",
+      loop: true,
+      autoplay,
+      ...(animationData ? { animationData } : { path: "top-left.json" }),
+      rendererSettings: {
+        preserveAspectRatio: "xMidYMid meet"
+      }
+    });
+
+    animation.setSpeed(0.65);
+  });
+}
+
 function initFallingPetals() {
   const reducedMotion = PREFERS_REDUCED_MOTION.matches;
   if (reducedMotion || !petalContainer) {
@@ -461,7 +504,7 @@ function initFallingPetals() {
   }
 
   const petalCount = 18;
-  const petalColors = ["#f6b9ba", "#f09aa8", "#f2c35f", "#ffdb8a"];
+  const petalColors = ["#efd8df", "#e4ccd6", "#e2c9ad", "#caa27a"];
 
   for (let i = 0; i < petalCount; i += 1) {
     const petal = document.createElement("span");
@@ -471,7 +514,7 @@ function initFallingPetals() {
     petal.style.animationDelay = `${Math.random() * 7}s`;
     petal.style.opacity = `${0.5 + Math.random() * 0.45}`;
     petal.style.background = petalColors[Math.floor(Math.random() * petalColors.length)];
-    petal.style.filter = "drop-shadow(0 2px 2px rgba(122, 31, 47, 0.18))";
+    petal.style.filter = "drop-shadow(0 2px 2px rgba(122, 31, 47, 0.16))";
     petalContainer.appendChild(petal);
   }
 }
@@ -502,7 +545,7 @@ function createDiamondRingModel(THREE, options = {}) {
   const {
     radius = 1,
     tube = 0.11,
-    bandColor = 0xf3cd63,
+    bandColor = 0xe2c9ad,
     diamondSize = 0.2,
     prongRadius = 0.018,
     prongHeight = 0.14,
@@ -653,7 +696,7 @@ function initOpeningLoaderRings3D(durationMs = OPENING_TIMELINE.totalMs) {
   const ring1 = createDiamondRingModel(THREE, {
     radius: 0.8,
     tube: 0.085,
-    bandColor: 0xf0c65b,
+    bandColor: 0xe2c9ad,
     diamondSize: 0.24,
     prongRadius: 0.012,
     prongHeight: 0.13,
@@ -667,7 +710,7 @@ function initOpeningLoaderRings3D(durationMs = OPENING_TIMELINE.totalMs) {
   const ring2 = createDiamondRingModel(THREE, {
     radius: 0.8,
     tube: 0.085,
-    bandColor: 0xe6bc50,
+    bandColor: 0xcaa27a,
     diamondSize: 0.24,
     prongRadius: 0.012,
     prongHeight: 0.13,
@@ -681,12 +724,12 @@ function initOpeningLoaderRings3D(durationMs = OPENING_TIMELINE.totalMs) {
   scene.add(ring1);
   scene.add(ring2);
 
-  scene.add(new THREE.AmbientLight(0xfff1ce, 0.95));
-  const keyLight = new THREE.DirectionalLight(0xffe2a7, 1.45);
+  scene.add(new THREE.AmbientLight(0xf8f1f3, 0.95));
+  const keyLight = new THREE.DirectionalLight(0xf0e2e8, 1.45);
   keyLight.position.set(2.8, 2.2, 3.6);
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(0xffe0a0, 0.7);
+  const fillLight = new THREE.DirectionalLight(0xe8d7df, 0.7);
   fillLight.position.set(-2.4, 1.6, 2.8);
   scene.add(fillLight);
 
@@ -780,7 +823,7 @@ function initRings3D(options = {}) {
   const ring1 = createDiamondRingModel(THREE, {
     radius: 1.02,
     tube: 0.11,
-    bandColor: 0xffd460,
+    bandColor: 0xe2c9ad,
     diamondSize: 0.5,
     prongRadius: 0.017,
     prongHeight: 0.28,
@@ -794,7 +837,7 @@ function initRings3D(options = {}) {
   const ring2 = createDiamondRingModel(THREE, {
     radius: 1.02,
     tube: 0.11,
-    bandColor: 0xf6cb58,
+    bandColor: 0xcaa27a,
     diamondSize: 0.5,
     prongRadius: 0.017,
     prongHeight: 0.28,
@@ -808,14 +851,14 @@ function initRings3D(options = {}) {
   scene.add(ring1);
   scene.add(ring2);
 
-  const ambient = new THREE.AmbientLight(0xfff3d6, 0.42);
+  const ambient = new THREE.AmbientLight(0xf9f3f5, 0.42);
   scene.add(ambient);
 
-  const keyLight = new THREE.DirectionalLight(0xffd88a, 2.1);
+  const keyLight = new THREE.DirectionalLight(0xf2e3e8, 2.1);
   keyLight.position.set(4.6, 3.4, 4.8);
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(0xfff1c1, 1.4);
+  const fillLight = new THREE.DirectionalLight(0xe9dde3, 1.4);
   fillLight.position.set(-4.8, 2.8, 3.6);
   scene.add(fillLight);
 
@@ -823,7 +866,7 @@ function initRings3D(options = {}) {
   backLight.position.set(0, -2.4, -4.5);
   scene.add(backLight);
 
-  const sparkleLight = new THREE.PointLight(0xffe2a3, 22, 7.5, 2);
+  const sparkleLight = new THREE.PointLight(0xeadce2, 22, 7.5, 2);
   sparkleLight.position.set(0, 0.45, 1.6);
   scene.add(sparkleLight);
 
@@ -904,4 +947,5 @@ initActiveNav();
 initRevealAnimations();
 initCursorGlow();
 initParallaxBackground();
+initCornerLotties();
 initFallingPetals();
