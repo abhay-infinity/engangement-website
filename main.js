@@ -1,25 +1,32 @@
 const EVENT_INFO = {
   couple: "Jaydeep and Dinal",
-  eventDateTime: "April 29, 2026 10:00:00",
+  eventDateTime: "April 29, 2026 10:30:00",
   venue: "Gurukul Banquet Hall, Dhebar Road, opposite Jimmy Tower, Rajkot, Gujarat - 360002"
 };
 
 const translations = {
   en: {
     navHome: "Home", navInv: "Invitation", navSched: "Schedule", navVenue: "Venue", navRsvp: "RSVP",
-    eyebrow: "Shubh Vivah Sankalp",
+    eyebrow: "Shubh Mangal Sagai",
     title: "Engagement Ceremony",
-    date: "29 April 2026 | Muhurat: 10:00 AM",
+    date: "29 April 2026 | Entry: 10:30 AM",
     hindiLine: "Aap sabke aashirwad se humari khushi aur badhegi.",
     invTitle: "With Great Joy, We Invite You",
     invMsg: "We cordially invite you and your family to celebrate the engagement of our children. Your gracious presence and blessings will make this day truly memorable.",
     groomFam: "Groom's Family", brideFam: "Bride's Family", dressCode: "Dress Code",
+    groomFamilyName: "Sapariya Family",
+    brideFamilyName: "Dhanani Family",
     dressDesc: "Traditional Indian / Festive Ethnic Wear",
     schedTitle: "Ceremony Schedule",
-    act1: "Guest Welcome & Ganesh Vandana", act2: "Ring Exchange Ceremony", act3: "Family Blessings & Photography", act4: "Lunch",
+    act1: "Entry", act2: "Ring Exchange Ceremony", act3: "Lunch",
     venueTitle: "Venue",
+    venueName: "Gurukul Banquet Hall",
+    venueAddress: "Dhebar Road, opposite Jimmy Tower, Rajkot, Gujarat - 360002",
+    mapIframeTitle: "Map to Gurukul Banquet Hall",
     rsvpMsg: "Kindly confirm your presence by 22 April 2026.",
-    contact: "Contact Person", phone: "Phone", waTitle: "WhatsApp RSVP", waBtn: "Send Confirmation",
+    contact: "Contact Person",
+    contactPersonName: "Mr. Kantibhai Sapariya",
+    phone: "Phone", waTitle: "WhatsApp RSVP", waBtn: "Send Confirmation",
     footer: "Made with love for our special day.",
     loader: "Preparing a Shubh Beginning...",
     timeDays: "Days", timeHours: "Hours", timeMins: "Minutes left",
@@ -32,19 +39,26 @@ const translations = {
   },
   gu: {
     navHome: "મુખ્ય પૃષ્ઠ", navInv: "આમંત્રણ", navSched: "કાર્યક્રમ", navVenue: "સ્થળ", navRsvp: "આરએસવીપી",
-    eyebrow: "શુભ વિવાહ સંકલ્પ",
+    eyebrow: "શુભ મંગળ સગાઈ",
     title: "સગાઈ સમારંભ",
-    date: "૨૯ એપ્રિલ ૨૦૨૬ | મુહૂર્ત: સવારે ૧૦:૦૦",
+    date: "૨૯ એપ્રિલ ૨૦૨૬ | પ્રવેશ: સવારે ૧૦:૩૦",
     hindiLine: "આપ સૌના આશીર્વાદથી અમારી ખુશીમાં વધારો થશે.",
     invTitle: "અમે તમને આનંદપૂર્વક આમંત્રિત કરીએ છીએ",
     invMsg: "અમારા બાળકોની સગાઈ નિમિત્તે અમે તમને અને તમારા પરિવારને હાર્દિક આમંત્રણ આપીએ છીએ. તમારી સ્નેહપૂર્ણ હાજરી અને આશીર્વાદ આ દિવસને ખરેખર યાદગાર બનાવશે.",
     groomFam: "વરપક્ષ", brideFam: "કન્યાપક્ષ", dressCode: "પહેરવેશ",
+    groomFamilyName: "સપરિયા પરિવાર",
+    brideFamilyName: "ધાનાણી પરિવાર",
     dressDesc: "ભારતીય પારંપરિક / એથનિક વેર",
     schedTitle: "કાર્યક્રમની રૂપરેખા",
-    act1: "મહેમાનોનું સ્વાગત અને ગણેશ વંદના", act2: "રિંગ સેરેમની", act3: "આશીર્વાદ અને ફોટોગ્રાફી", act4: "ભોજન સમારંભ",
+    act1: "પ્રવેશ", act2: "રિંગ સેરેમની", act3: "ભોજન સમારંભ",
     venueTitle: "સ્થળ",
+    venueName: "ગુરુકુલ બેન્ક્વેટ હોલ",
+    venueAddress: "ઢેબર રોડ, જિમી ટાવર સામે, રાજકોટ, ગુજરાત - ૩૬૦૦૦૨",
+    mapIframeTitle: "ગુરુકુલ બેન્ક્વેટ હોલ નકશો",
     rsvpMsg: "કૃપા કરીને ૨૨ એપ્રિલ ૨૦૨૬ સુધીમાં તમારી હાજરીની પુષ્ટિ કરો.",
-    contact: "સંપર્ક વ્યક્તિ", phone: "મોબાઈલ નંબર", waTitle: "વોટ્સએપ આરએસવીપી", waBtn: "પુષ્ટિ મોકલો",
+    contact: "સંપર્ક વ્યક્તિ",
+    contactPersonName: "શ્રી કાંતિભાઈ સપરિયા",
+    phone: "મોબાઈલ નંબર", waTitle: "વોટ્સએપ આરએસવીપી", waBtn: "પુષ્ટિ મોકલો",
     footer: "અમારા ખાસ દિવસ માટે પ્રેમથી બનાવેલ.",
     loader: "ઉજવણીની તૈયારી થઈ રહી છે",
     timeDays: "દિવસ", timeHours: "કલાક", timeMins: "મિનિટ બાકી",
@@ -335,7 +349,12 @@ function applyTranslations() {
     if (!key || !(key in dictionary)) {
       return;
     }
-    element.textContent = dictionary[key];
+    const value = dictionary[key];
+    if (element.tagName === "IFRAME") {
+      element.setAttribute("title", value);
+      return;
+    }
+    element.textContent = value;
   });
 
   document.documentElement.lang = currentLang === "gu" ? "gu" : "en";
@@ -390,14 +409,24 @@ function initActiveNav() {
   sections.forEach((section) => observer.observe(section));
 }
 
-function initPremiumOpening() {
+/**
+ * @param {() => void} [onLandingReady] — runs when the J/D loader finishes and the main page is shown (not during the intro).
+ */
+function initPremiumOpening(onLandingReady) {
   const reducedMotion = PREFERS_REDUCED_MOTION.matches;
+
+  const notifyLandingReady = () => {
+    if (typeof onLandingReady === "function") {
+      onLandingReady();
+    }
+  };
 
   if (reducedMotion) {
     document.body.classList.add("is-ready");
     if (pageLoader) {
       pageLoader.classList.add("hidden");
     }
+    notifyLandingReady();
     return 0;
   }
 
@@ -423,6 +452,7 @@ function initPremiumOpening() {
       pageLoader.classList.add("hidden");
     }
     document.body.classList.add("is-ready");
+    notifyLandingReady();
   }, OPENING_TIMELINE.totalMs);
 
   return OPENING_TIMELINE.totalMs;
@@ -576,13 +606,21 @@ const BG_MUSIC_VOLUME = 0.22;
 
 function initBackgroundMusic() {
   if (!bgMusic) {
-    return;
+    return () => {};
   }
 
   bgMusic.volume = BG_MUSIC_VOLUME;
   bgMusic.loop = true;
   bgMusic.setAttribute("playsinline", "");
   bgMusic.setAttribute("webkit-playsinline", "");
+
+  /**
+   * Browsers block audible autoplay without a user gesture. We still try
+   * unmuted first; on failure we start muted playback (often allowed) and set
+   * autoplayAwaitingGesture so the first tap/scroll/keydown unmutes in the
+   * gesture handler.
+   */
+  let autoplayAwaitingGesture = false;
 
   const tryPlay = () => {
     const result = bgMusic.play();
@@ -592,9 +630,75 @@ function initBackgroundMusic() {
     return result;
   };
 
-  tryPlay();
+  const syncMusicButtonUI = (muted) => {
+    if (!musicToggleButton) {
+      return;
+    }
+    musicToggleButton.setAttribute("aria-pressed", muted ? "true" : "false");
+    musicToggleButton.setAttribute(
+      "aria-label",
+      muted ? "Unmute background music" : "Mute background music"
+    );
+    musicToggleButton.classList.toggle("is-muted", muted);
+  };
 
-  const resumeIfUnlocked = () => {
+  const startMutedUntilGesture = () => {
+    bgMusic.muted = true;
+    autoplayAwaitingGesture = true;
+    /**
+     * Audio is muted until a gesture, but keep the control looking "on" so it
+     * does not look broken; the browser still blocks sound without a tap.
+     */
+    if (musicToggleButton) {
+      musicToggleButton.classList.remove("is-muted");
+      musicToggleButton.setAttribute("aria-pressed", "false");
+      musicToggleButton.setAttribute(
+        "aria-label",
+        "Play background music — tap here or anywhere on the page"
+      );
+    }
+    tryPlay();
+  };
+
+  const attemptInitialPlayback = () => {
+    bgMusic.muted = false;
+    autoplayAwaitingGesture = false;
+    const result = bgMusic.play();
+    if (result && typeof result.then === "function") {
+      result
+        .then(() => {
+          autoplayAwaitingGesture = false;
+          syncMusicButtonUI(false);
+        })
+        .catch(() => {
+          startMutedUntilGesture();
+        });
+      return;
+    }
+    tryPlay();
+  };
+
+  const isMusicControlTarget = (event) => {
+    const t = event && event.target;
+    return typeof t?.closest === "function" && t.closest("#music-toggle");
+  };
+
+  const resumeIfUnlocked = (event) => {
+    /**
+     * The music button has its own handler. If we unmute here on capture and
+     * the user tapped the button, the button's click then toggles mute again
+     * — sound never stays on and the icon looks stuck muted.
+     */
+    if (isMusicControlTarget(event)) {
+      return;
+    }
+    if (autoplayAwaitingGesture) {
+      bgMusic.muted = false;
+      autoplayAwaitingGesture = false;
+      syncMusicButtonUI(false);
+      tryPlay();
+      return;
+    }
     if (bgMusic.muted) {
       return;
     }
@@ -606,8 +710,8 @@ function initBackgroundMusic() {
   /**
    * Mobile Safari / Chrome block autoplay until there is a user gesture.
    * Run in the capture phase on window so we still receive the gesture if a
-   * child calls stopPropagation. (Do not skip the music button: its handler
-   * calls tryPlay() after toggling mute so muted playback can unlock audio.)
+   * child calls stopPropagation. Skip #music-toggle — its own click handler
+   * starts or toggles playback without double-firing with this path.
    */
   const gestureOpts = { capture: true, passive: true };
   window.addEventListener("pointerdown", resumeIfUnlocked, gestureOpts);
@@ -615,36 +719,71 @@ function initBackgroundMusic() {
   window.addEventListener("touchend", resumeIfUnlocked, gestureOpts);
   window.addEventListener("click", resumeIfUnlocked, gestureOpts);
 
-  document.addEventListener("keydown", resumeIfUnlocked, { passive: true });
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (isMusicControlTarget(event)) {
+        return;
+      }
+      resumeIfUnlocked(event);
+    },
+    { passive: true }
+  );
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
       resumeIfUnlocked();
     }
   });
 
-  if (!musicToggleButton) {
-    return;
+  if (musicToggleButton) {
+    musicToggleButton.addEventListener("click", () => {
+      /**
+       * Waiting on browser autoplay unlock (muted pipeline): one tap unmutes;
+       * do not run the mute toggle in the same gesture.
+       */
+      if (autoplayAwaitingGesture) {
+        bgMusic.muted = false;
+        autoplayAwaitingGesture = false;
+        syncMusicButtonUI(false);
+        tryPlay();
+        return;
+      }
+      /**
+       * Autoplay is usually blocked while paused + unmuted. The first tap would
+       * otherwise flip mute before play(), so users only heard audio after a
+       * second tap. If nothing is playing yet, use this gesture only to start
+       * playback (stay unmuted) instead of toggling mute.
+       */
+      if (bgMusic.paused) {
+        autoplayAwaitingGesture = false;
+        bgMusic.muted = false;
+        syncMusicButtonUI(false);
+        tryPlay();
+        return;
+      }
+
+      bgMusic.muted = !bgMusic.muted;
+      const muted = bgMusic.muted;
+      if (!muted) {
+        autoplayAwaitingGesture = false;
+      }
+      syncMusicButtonUI(muted);
+      /**
+       * Always call play() on toggle: iOS needs a play() tied to the tap. If the
+       * user just muted, muted playback still unlocks the element so the next
+       * unmute can hear audio without a second gesture.
+       */
+      tryPlay();
+    });
   }
 
-  musicToggleButton.addEventListener("click", () => {
-    bgMusic.muted = !bgMusic.muted;
-    const muted = bgMusic.muted;
-    musicToggleButton.setAttribute("aria-pressed", muted ? "true" : "false");
-    musicToggleButton.setAttribute(
-      "aria-label",
-      muted ? "Unmute background music" : "Mute background music"
-    );
-    musicToggleButton.classList.toggle("is-muted", muted);
-    /**
-     * Always call play() on toggle: iOS needs a play() tied to the tap. If the
-     * user just muted, muted playback still unlocks the element so the next
-     * unmute can hear audio without a second gesture.
-     */
-    tryPlay();
-  });
+  return attemptInitialPlayback;
 }
 
-const openingDurationMs = initPremiumOpening();
+const startBackgroundMusicWhenLandingReady = initBackgroundMusic();
+const openingDurationMs = initPremiumOpening(() => {
+  startBackgroundMusicWhenLandingReady();
+});
 initOpeningFireworks({
   startDelayMs: openingDurationMs + 120,
   launchDurationMs: 2500,
@@ -659,4 +798,3 @@ initCursorGlow();
 initParallaxBackground();
 initCornerLotties();
 initFallingPetals();
-initBackgroundMusic();
