@@ -452,6 +452,218 @@ h2 {
   text-decoration: none;
 }
 
+/* RSVP — dual host cards */
+.rsvp-section {
+  padding-top: 64px;
+  padding-bottom: 58px;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(202, 162, 122, 0.12), transparent 55%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.98), rgba(252, 247, 250, 0.94));
+}
+
+.rsvp-section__header {
+  position: relative;
+  z-index: 1;
+}
+
+.rsvp-section__eyebrow {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  color: var(--accent);
+  letter-spacing: 0.35em;
+  text-indent: 0.35em;
+}
+
+.rsvp-section__hint {
+  margin: 14px auto 0;
+  max-width: 520px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--secondary);
+  line-height: 1.5;
+}
+
+.rsvp-host-grid {
+  margin-top: 36px;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 1fr;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 720px) {
+  .rsvp-host-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+  }
+}
+
+.rsvp-host-card {
+  position: relative;
+  text-align: center;
+  padding: 28px 22px 26px;
+  border-radius: 20px;
+  overflow: hidden;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 252, 0.92) 45%, rgba(247, 239, 243, 0.96) 100%);
+  border: 1px solid rgba(184, 79, 59, 0.28);
+  box-shadow:
+    0 16px 40px rgba(74, 37, 52, 0.1),
+    0 0 0 1px rgba(255, 252, 253, 0.9) inset;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.35s ease;
+}
+
+.rsvp-host-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--secondary), var(--accent));
+  opacity: 0.95;
+}
+
+.rsvp-host-card__shine {
+  position: absolute;
+  inset: -40%;
+  z-index: 0;
+  background: conic-gradient(from 200deg at 50% 50%, transparent 0deg, rgba(255, 248, 250, 0.45) 60deg, transparent 120deg);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: rsvp-shine 14s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsvp-host-card__shine {
+    animation: none;
+    opacity: 0.25;
+  }
+}
+
+@keyframes rsvp-shine {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rsvp-host-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201, 168, 108, 0.55);
+  box-shadow:
+    0 22px 48px rgba(74, 37, 52, 0.14),
+    0 0 28px rgba(202, 162, 122, 0.18),
+    0 0 0 1px rgba(255, 252, 253, 0.95) inset;
+}
+
+.rsvp-host-card__role {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.rsvp-host-card__name {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 14px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.25rem, 3.5vw, 1.55rem);
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1.35;
+}
+
+.rsvp-host-card__phone {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 20px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.rsvp-host-card__phone a {
+  color: var(--text-main);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(122, 31, 47, 0.35);
+  padding-bottom: 2px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.rsvp-host-card__phone a:hover {
+  color: var(--primary);
+  border-bottom-color: var(--accent);
+}
+
+.rsvp-host-card__actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.rsvp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.rsvp-btn__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.rsvp-btn--call {
+  background: linear-gradient(160deg, #fffefd, #faf4f6);
+  color: var(--primary);
+  border-color: rgba(122, 31, 47, 0.35);
+  box-shadow: 0 4px 14px rgba(74, 37, 52, 0.08);
+}
+
+.rsvp-btn--call:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 20px rgba(74, 37, 52, 0.12);
+}
+
+.rsvp-btn--wa {
+  background: linear-gradient(135deg, #2eb85c 0%, #128c7e 48%, #075e54 100%);
+  color: #fff;
+  border-color: rgba(18, 140, 126, 0.5);
+  box-shadow: 0 6px 18px rgba(7, 94, 84, 0.28);
+}
+
+.rsvp-btn--wa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(7, 94, 84, 0.38);
+}
+
+.rsvp-btn--wa .rsvp-btn__icon {
+  width: 17px;
+  height: 17px;
+}
+
 .schedule-list {
   margin-top: 24px;
   display: grid;
